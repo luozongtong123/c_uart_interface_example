@@ -47,7 +47,6 @@
  *
  */
 
-
 #ifndef AUTOPILOT_INTERFACE_H_
 #define AUTOPILOT_INTERFACE_H_
 
@@ -101,19 +100,17 @@
  *     MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_YAW_ANGLE;
  */
 
-                                                // bit number  876543210987654321
-#define MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_POSITION     0b0000110111111000
-#define MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_VELOCITY     0b0000110111000111
+// bit number  876543210987654321
+#define MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_POSITION 0b0000110111111000
+#define MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_VELOCITY 0b0000110111000111
 #define MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_ACCELERATION 0b0000110000111111
-#define MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_FORCE        0b0000111000111111
-#define MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_YAW_ANGLE    0b0000100111111111
-#define MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_YAW_RATE     0b0000010111111111
-
+#define MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_FORCE 0b0000111000111111
+#define MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_YAW_ANGLE 0b0000100111111111
+#define MAVLINK_MSG_SET_POSITION_TARGET_LOCAL_NED_YAW_RATE 0b0000010111111111
 
 // ------------------------------------------------------------------------------
 //   Prototypes
 // ------------------------------------------------------------------------------
-
 
 // helper functions
 uint64_t get_time_usec();
@@ -123,9 +120,8 @@ void set_acceleration(float ax, float ay, float az, mavlink_set_position_target_
 void set_yaw(float yaw, mavlink_set_position_target_local_ned_t &sp);
 void set_yaw_rate(float yaw_rate, mavlink_set_position_target_local_ned_t &sp);
 
-void* start_autopilot_interface_read_thread(void *args);
-void* start_autopilot_interface_write_thread(void *args);
-
+void *start_autopilot_interface_read_thread(void *args);
+void *start_autopilot_interface_write_thread(void *args);
 
 // ------------------------------------------------------------------------------
 //   Data Structures
@@ -148,6 +144,21 @@ struct Time_Stamps
 	uint64_t position_target_global_int;
 	uint64_t highres_imu;
 	uint64_t attitude;
+	uint64_t servo_output_raw;
+	uint64_t command_ack;
+	uint64_t named_value_float;
+	uint64_t vfr_hud;
+	uint64_t power_status;
+	uint64_t system_time;
+	uint64_t mission_current;
+	uint64_t gps_raw_int;
+	uint64_t nav_controller_output;
+	uint64_t rc_channels;
+	uint64_t vibration;
+	uint64_t raw_imu;
+	uint64_t scaled_pressure;
+	uint64_t scaled_imu2;
+	uint64_t scaled_pressure2;
 
 	void
 	reset_timestamps()
@@ -163,13 +174,12 @@ struct Time_Stamps
 		highres_imu = 0;
 		attitude = 0;
 	}
-
 };
-
 
 // Struct containing information on the MAV we are currently connected to
 
-struct Mavlink_Messages {
+struct Mavlink_Messages
+{
 
 	int sysid;
 	int compid;
@@ -204,8 +214,52 @@ struct Mavlink_Messages {
 	// Attitude
 	mavlink_attitude_t attitude;
 
-	// System Parameters?
+	// Servo Output Raw
+	mavlink_servo_output_raw_t servo_output_raw;
 
+	// Command ACK
+	mavlink_command_ack_t command_ack;
+
+	// Named Value Float
+	mavlink_named_value_float_t named_value_float;
+
+	// VFR_HUD
+	mavlink_vfr_hud_t vfr_hud;
+
+	// Power Status
+	mavlink_power_status_t power_status;
+
+	// System Time
+	mavlink_system_time_t system_time;
+
+	// Mission Current
+	mavlink_mission_current_t mission_current;
+
+	// GPS Raw INT
+	mavlink_gps_raw_int_t gps_raw_int;
+
+	// NAV Controller Output
+	mavlink_nav_controller_output_t nav_controller_output;
+
+	// RC Channels
+	mavlink_rc_channels_t rc_channels;
+
+	// Vibration
+	mavlink_vibration_t vibration;
+
+	// Raw IMU
+	mavlink_raw_imu_t raw_imu;
+
+	// Scaled Pressure
+	mavlink_scaled_pressure_t scaled_pressure;
+
+	// Scaled IMU2
+	mavlink_scaled_imu2_t scaled_imu2;
+
+	// Scaled Pressure (depth sensor)
+	mavlink_scaled_pressure2_t scaled_pressure2;
+
+	// System Parameters?
 
 	// Time Stamps
 	Time_Stamps time_stamps;
@@ -215,9 +269,7 @@ struct Mavlink_Messages {
 	{
 		time_stamps.reset_timestamps();
 	}
-
 };
-
 
 // ----------------------------------------------------------------------------------
 //   Autopilot Interface Class
@@ -239,8 +291,7 @@ struct Mavlink_Messages {
 class Autopilot_Interface
 {
 
-public:
-
+  public:
 	Autopilot_Interface();
 	Autopilot_Interface(Serial_Port *serial_port_);
 	~Autopilot_Interface();
@@ -248,9 +299,9 @@ public:
 	char reading_status;
 	char writing_status;
 	char control_status;
-    uint64_t write_count;
+	uint64_t write_count;
 
-    int system_id;
+	int system_id;
 	int autopilot_id;
 	int companion_id;
 
@@ -259,7 +310,7 @@ public:
 
 	void update_setpoint(mavlink_set_position_target_local_ned_t setpoint);
 	void read_messages();
-	int  write_message(mavlink_message_t message);
+	int write_message(mavlink_message_t message);
 
 	void enable_offboard_control();
 	void disable_offboard_control();
@@ -270,11 +321,9 @@ public:
 	void start_read_thread();
 	void start_write_thread(void);
 
-	void handle_quit( int sig );
+	void handle_quit(int sig);
 
-
-private:
-
+  private:
 	Serial_Port *serial_port;
 
 	bool time_to_exit;
@@ -287,13 +336,8 @@ private:
 	void read_thread();
 	void write_thread(void);
 
-	int toggle_offboard_control( bool flag );
+	int toggle_offboard_control(bool flag);
 	void write_setpoint();
-
 };
 
-
-
 #endif // AUTOPILOT_INTERFACE_H_
-
-
