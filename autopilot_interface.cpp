@@ -51,16 +51,26 @@
 //   Includes
 // ------------------------------------------------------------------------------
 
+#include <thread>
 #include "autopilot_interface.h"
 
 // ----------------------------------------------------------------------------------
 //   Time
 // ------------------- ---------------------------------------------------------------
-uint64_t get_time_usec()
+uint64_t get_time_msec()
 {
+#ifdef WIN32
+#include <windows.h>
+	SYSTEMTIME _time_stamp;
+	GetLocalTime(&_time_stamp);
+	return _time_stamp.wHour * 3600 * 1000 + _time_stamp.wMinute * 60 * 1000 +
+		   _time_stamp.wSecond * 1000 + _time_stamp.wMilliseconds;
+#else
+#include <sys/time.h>
 	static struct timeval _time_stamp;
 	gettimeofday(&_time_stamp, NULL);
-	return _time_stamp.tv_sec * 1000000 + _time_stamp.tv_usec;
+	return _time_stamp.tv_sec * 1000 + _time_stamp.tv_usec / 1000;
+#endif
 }
 
 // ----------------------------------------------------------------------------------
@@ -244,7 +254,8 @@ void Autopilot_Interface::read_messages()
 			{
 				//printf("MAVLINK_MSG_ID_HEARTBEAT\n");
 				mavlink_msg_heartbeat_decode(&message, &(current_messages.heartbeat));
-				current_messages.time_stamps.heartbeat = get_time_usec();
+				current_messages.time_stamps.heartbeat = get_time_msec();
+				// printf("timestamp:%d\n", current_messages.time_stamps.heartbeat);
 				this_timestamps.heartbeat = current_messages.time_stamps.heartbeat;
 				// printf("type:%d, autopilot:%d, base_mode:%d, custom_mode:%D, system_status:%d, mavlink_version:%d \n",
 				// 	current_messages.heartbeat.type, current_messages.heartbeat.autopilot,
@@ -257,7 +268,7 @@ void Autopilot_Interface::read_messages()
 			{
 				//printf("MAVLINK_MSG_ID_SYS_STATUS\n");
 				mavlink_msg_sys_status_decode(&message, &(current_messages.sys_status));
-				current_messages.time_stamps.sys_status = get_time_usec();
+				current_messages.time_stamps.sys_status = get_time_msec();
 				this_timestamps.sys_status = current_messages.time_stamps.sys_status;
 				break;
 			}
@@ -266,7 +277,7 @@ void Autopilot_Interface::read_messages()
 			{
 				//printf("MAVLINK_MSG_ID_BATTERY_STATUS\n");
 				mavlink_msg_battery_status_decode(&message, &(current_messages.battery_status));
-				current_messages.time_stamps.battery_status = get_time_usec();
+				current_messages.time_stamps.battery_status = get_time_msec();
 				this_timestamps.battery_status = current_messages.time_stamps.battery_status;
 				break;
 			}
@@ -275,7 +286,7 @@ void Autopilot_Interface::read_messages()
 			{
 				//printf("MAVLINK_MSG_ID_RADIO_STATUS\n");
 				mavlink_msg_radio_status_decode(&message, &(current_messages.radio_status));
-				current_messages.time_stamps.radio_status = get_time_usec();
+				current_messages.time_stamps.radio_status = get_time_msec();
 				this_timestamps.radio_status = current_messages.time_stamps.radio_status;
 				break;
 			}
@@ -284,7 +295,7 @@ void Autopilot_Interface::read_messages()
 			{
 				//printf("MAVLINK_MSG_ID_LOCAL_POSITION_NED\n");
 				mavlink_msg_local_position_ned_decode(&message, &(current_messages.local_position_ned));
-				current_messages.time_stamps.local_position_ned = get_time_usec();
+				current_messages.time_stamps.local_position_ned = get_time_msec();
 				this_timestamps.local_position_ned = current_messages.time_stamps.local_position_ned;
 				break;
 			}
@@ -293,7 +304,7 @@ void Autopilot_Interface::read_messages()
 			{
 				//printf("MAVLINK_MSG_ID_GLOBAL_POSITION_INT\n");
 				mavlink_msg_global_position_int_decode(&message, &(current_messages.global_position_int));
-				current_messages.time_stamps.global_position_int = get_time_usec();
+				current_messages.time_stamps.global_position_int = get_time_msec();
 				this_timestamps.global_position_int = current_messages.time_stamps.global_position_int;
 				break;
 			}
@@ -302,7 +313,7 @@ void Autopilot_Interface::read_messages()
 			{
 				//printf("MAVLINK_MSG_ID_POSITION_TARGET_LOCAL_NED\n");
 				mavlink_msg_position_target_local_ned_decode(&message, &(current_messages.position_target_local_ned));
-				current_messages.time_stamps.position_target_local_ned = get_time_usec();
+				current_messages.time_stamps.position_target_local_ned = get_time_msec();
 				this_timestamps.position_target_local_ned = current_messages.time_stamps.position_target_local_ned;
 				break;
 			}
@@ -311,7 +322,7 @@ void Autopilot_Interface::read_messages()
 			{
 				//printf("MAVLINK_MSG_ID_POSITION_TARGET_GLOBAL_INT\n");
 				mavlink_msg_position_target_global_int_decode(&message, &(current_messages.position_target_global_int));
-				current_messages.time_stamps.position_target_global_int = get_time_usec();
+				current_messages.time_stamps.position_target_global_int = get_time_msec();
 				this_timestamps.position_target_global_int = current_messages.time_stamps.position_target_global_int;
 				break;
 			}
@@ -320,7 +331,7 @@ void Autopilot_Interface::read_messages()
 			{
 				//printf("MAVLINK_MSG_ID_HIGHRES_IMU\n");
 				mavlink_msg_highres_imu_decode(&message, &(current_messages.highres_imu));
-				current_messages.time_stamps.highres_imu = get_time_usec();
+				current_messages.time_stamps.highres_imu = get_time_msec();
 				this_timestamps.highres_imu = current_messages.time_stamps.highres_imu;
 				break;
 			}
@@ -329,7 +340,7 @@ void Autopilot_Interface::read_messages()
 			{
 				//printf("MAVLINK_MSG_ID_ATTITUDE\n");
 				mavlink_msg_attitude_decode(&message, &(current_messages.attitude));
-				current_messages.time_stamps.attitude = get_time_usec();
+				current_messages.time_stamps.attitude = get_time_msec();
 				this_timestamps.attitude = current_messages.time_stamps.attitude;
 				break;
 			}
@@ -338,7 +349,7 @@ void Autopilot_Interface::read_messages()
 			{
 				//printf("MAVLINK_MSG_ID_SERVO_OUTPUT_RAW\n");
 				mavlink_msg_servo_output_raw_decode(&message, &(current_messages.servo_output_raw));
-				current_messages.time_stamps.servo_output_raw = get_time_usec();
+				current_messages.time_stamps.servo_output_raw = get_time_msec();
 				this_timestamps.servo_output_raw = current_messages.time_stamps.servo_output_raw;
 				break;
 			}
@@ -346,7 +357,7 @@ void Autopilot_Interface::read_messages()
 			{
 				//printf("MAVLINK_MSG_ID_COMMAND_ACK\n");
 				mavlink_msg_command_ack_decode(&message, &(current_messages.command_ack));
-				current_messages.time_stamps.command_ack = get_time_usec();
+				current_messages.time_stamps.command_ack = get_time_msec();
 				this_timestamps.command_ack = current_messages.time_stamps.command_ack;
 				printf("Command_ACK, command:%d, result:%d. \n", current_messages.command_ack.command,
 					   current_messages.command_ack.result);
@@ -356,7 +367,7 @@ void Autopilot_Interface::read_messages()
 			{
 				//printf("MAVLINK_MSG_ID_NAMED_VALUE_FLOA\n");
 				mavlink_msg_named_value_float_decode(&message, &(current_messages.named_value_float));
-				current_messages.time_stamps.named_value_float = get_time_usec();
+				current_messages.time_stamps.named_value_float = get_time_msec();
 				this_timestamps.named_value_float = current_messages.time_stamps.named_value_float;
 				// printf(current_messages.named_value_float.name);
 				// printf(": %f \n", current_messages.named_value_float.value);
@@ -366,7 +377,7 @@ void Autopilot_Interface::read_messages()
 			{
 				// printf("MAVLINK_MSG_ID_VFR_HUD\n");
 				mavlink_msg_vfr_hud_decode(&message, &(current_messages.vfr_hud));
-				current_messages.time_stamps.vfr_hud = get_time_usec();
+				current_messages.time_stamps.vfr_hud = get_time_msec();
 				this_timestamps.vfr_hud = current_messages.time_stamps.vfr_hud;
 				// printf("heading:%d\n", current_messages.vfr_hud.heading);
 				break;
@@ -375,7 +386,7 @@ void Autopilot_Interface::read_messages()
 			{
 				// printf("MAVLINK_MSG_ID_POWER_STATUS\n");
 				mavlink_msg_power_status_decode(&message, &(current_messages.power_status));
-				current_messages.time_stamps.power_status = get_time_usec();
+				current_messages.time_stamps.power_status = get_time_msec();
 				this_timestamps.power_status = current_messages.time_stamps.power_status;
 				// printf("Vcc(5V rail voltage in mV):%d, Vservo(servo rail voltage in mV):%d, "
 				// "power supply status flags:%d.\n", current_messages.power_status.Vcc,
@@ -386,7 +397,7 @@ void Autopilot_Interface::read_messages()
 			{
 				// printf("MAVLINK_MSG_ID_SYSTEM_TIME\n");
 				mavlink_msg_system_time_decode(&message, &(current_messages.system_time));
-				current_messages.time_stamps.system_time = get_time_usec();
+				current_messages.time_stamps.system_time = get_time_msec();
 				this_timestamps.system_time = current_messages.time_stamps.system_time;
 				break;
 			}
@@ -394,7 +405,7 @@ void Autopilot_Interface::read_messages()
 			{
 				// printf("MAVLINK_MSG_ID_MISSION_CURRENT\n");
 				mavlink_msg_mission_current_decode(&message, &(current_messages.mission_current));
-				current_messages.time_stamps.mission_current = get_time_usec();
+				current_messages.time_stamps.mission_current = get_time_msec();
 				this_timestamps.mission_current = current_messages.time_stamps.mission_current;
 				break;
 			}
@@ -402,7 +413,7 @@ void Autopilot_Interface::read_messages()
 			{
 				// printf("MAVLINK_MSG_ID_GPS_RAW_INT\n");
 				mavlink_msg_gps_raw_int_decode(&message, &(current_messages.gps_raw_int));
-				current_messages.time_stamps.gps_raw_int = get_time_usec();
+				current_messages.time_stamps.gps_raw_int = get_time_msec();
 				this_timestamps.gps_raw_int = current_messages.time_stamps.gps_raw_int;
 				break;
 			}
@@ -410,7 +421,7 @@ void Autopilot_Interface::read_messages()
 			{
 				// printf("MAVLINK_MSG_ID_NAV_CONTROLLER_OUTPUT\n");
 				mavlink_msg_nav_controller_output_decode(&message, &(current_messages.nav_controller_output));
-				current_messages.time_stamps.nav_controller_output = get_time_usec();
+				current_messages.time_stamps.nav_controller_output = get_time_msec();
 				this_timestamps.nav_controller_output = current_messages.time_stamps.nav_controller_output;
 				break;
 			}
@@ -418,7 +429,7 @@ void Autopilot_Interface::read_messages()
 			{
 				// printf("MAVLINK_MSG_ID_RC_CHANNELS\n");
 				mavlink_msg_rc_channels_decode(&message, &(current_messages.rc_channels));
-				current_messages.time_stamps.rc_channels = get_time_usec();
+				current_messages.time_stamps.rc_channels = get_time_msec();
 				this_timestamps.rc_channels = current_messages.time_stamps.rc_channels;
 				break;
 			}
@@ -426,7 +437,7 @@ void Autopilot_Interface::read_messages()
 			{
 				// printf("MAVLINK_MSG_ID_VIBRATION\n");
 				mavlink_msg_vibration_decode(&message, &(current_messages.vibration));
-				current_messages.time_stamps.vibration = get_time_usec();
+				current_messages.time_stamps.vibration = get_time_msec();
 				this_timestamps.vibration = current_messages.time_stamps.vibration;
 				break;
 			}
@@ -434,7 +445,7 @@ void Autopilot_Interface::read_messages()
 			{
 				// printf("MAVLINK_MSG_ID_RAW_IMU\n");
 				mavlink_msg_raw_imu_decode(&message, &(current_messages.raw_imu));
-				current_messages.time_stamps.raw_imu = get_time_usec();
+				current_messages.time_stamps.raw_imu = get_time_msec();
 				this_timestamps.raw_imu = current_messages.time_stamps.raw_imu;
 				break;
 			}
@@ -442,7 +453,7 @@ void Autopilot_Interface::read_messages()
 			{
 				// printf("MAVLINK_MSG_ID_SCALED_PRESSURE\n");
 				mavlink_msg_scaled_pressure_decode(&message, &(current_messages.scaled_pressure));
-				current_messages.time_stamps.scaled_pressure = get_time_usec();
+				current_messages.time_stamps.scaled_pressure = get_time_msec();
 				this_timestamps.scaled_pressure = current_messages.time_stamps.scaled_pressure;
 				break;
 			}
@@ -450,7 +461,7 @@ void Autopilot_Interface::read_messages()
 			{
 				// printf("MAVLINK_MSG_ID_SCALED_IMU2\n");
 				mavlink_msg_scaled_imu2_decode(&message, &(current_messages.scaled_imu2));
-				current_messages.time_stamps.scaled_imu2 = get_time_usec();
+				current_messages.time_stamps.scaled_imu2 = get_time_msec();
 				this_timestamps.scaled_imu2 = current_messages.time_stamps.scaled_imu2;
 				break;
 			}
@@ -458,7 +469,7 @@ void Autopilot_Interface::read_messages()
 			{
 				// printf("MAVLINK_MSG_ID_SCALED_PRESSURE2\n");
 				mavlink_msg_scaled_pressure2_decode(&message, &(current_messages.scaled_pressure2));
-				current_messages.time_stamps.scaled_pressure2 = get_time_usec();
+				current_messages.time_stamps.scaled_pressure2 = get_time_msec();
 				this_timestamps.scaled_pressure2 = current_messages.time_stamps.scaled_pressure2;
 				break;
 			}
@@ -525,7 +536,7 @@ void Autopilot_Interface::write_setpoint()
 
 	// double check some system parameters
 	if (not sp.time_boot_ms)
-		sp.time_boot_ms = (uint32_t)(get_time_usec() / 1000);
+		sp.time_boot_ms = (uint32_t)get_time_msec();
 	sp.target_system = system_id;
 	sp.target_component = autopilot_id;
 
@@ -662,9 +673,11 @@ void Autopilot_Interface::start()
 
 	printf("START READ THREAD \n");
 
-	result = pthread_create(&read_tid, NULL, &start_autopilot_interface_read_thread, this);
-	if (result)
-		throw result;
+	std::thread autopilot_interface_read_thread(&Autopilot_Interface::start_read_thread, this);
+	autopilot_interface_read_thread.detach();
+	// result = pthread_create(&read_tid, NULL, &start_autopilot_interface_read_thread, this);
+	// if (result)
+	// 	throw result;
 
 	// now we're reading messages
 	printf("\n");
@@ -747,9 +760,11 @@ void Autopilot_Interface::start()
 	// --------------------------------------------------------------------------
 	printf("START WRITE THREAD \n");
 
-	result = pthread_create(&write_tid, NULL, &start_autopilot_interface_write_thread, this);
-	if (result)
-		throw result;
+	std::thread autopilot_interface_write_thread(&Autopilot_Interface::start_write_thread, this);
+	autopilot_interface_write_thread.detach();
+	// result = pthread_create(&write_tid, NULL, &start_autopilot_interface_write_thread, this);
+	// if (result)
+	// 	throw result;
 
 	// wait for it to be started
 	while (not writing_status)
@@ -776,8 +791,10 @@ void Autopilot_Interface::stop()
 	time_to_exit = true;
 
 	// wait for exit
-	pthread_join(read_tid, NULL);
-	pthread_join(write_tid, NULL);
+	// pthread_join(read_tid, NULL);
+	// pthread_join(write_tid, NULL);
+	// autopilot_interface_read_thread.join();
+	// autopilot_interface_read_thread.join();
 
 	// now the read and write threads are closed
 	printf("\n");

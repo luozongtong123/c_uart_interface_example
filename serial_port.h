@@ -59,7 +59,9 @@
 #include <unistd.h>  // UNIX standard function definitions
 #include <fcntl.h>   // File control definitions
 #include <termios.h> // POSIX terminal control definitions
-#include <pthread.h> // This uses POSIX Threads
+// #include <pthread.h> // This uses POSIX Threads
+#include <thread>
+#include <mutex>
 #include <signal.h>
 
 #include <common/mavlink.h>
@@ -129,7 +131,8 @@ class Serial_Port
   private:
 	int fd;
 	mavlink_status_t lastStatus;
-	pthread_mutex_t lock;
+	std::mutex serial_mutex;
+	// pthread_mutex_t lock;
 
 	int _open_port(const char *port);
 	bool _setup_port(int baud, int data_bits, int stop_bits, bool parity, bool hardware_control);

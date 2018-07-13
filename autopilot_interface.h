@@ -57,8 +57,6 @@
 #include "serial_port.h"
 
 #include <signal.h>
-#include <time.h>
-#include <sys/time.h>
 
 #include <common/mavlink.h>
 
@@ -113,7 +111,7 @@
 // ------------------------------------------------------------------------------
 
 // helper functions
-uint64_t get_time_usec();
+uint64_t get_time_msec();
 void set_position(float x, float y, float z, mavlink_set_position_target_local_ned_t &sp);
 void set_velocity(float vx, float vy, float vz, mavlink_set_position_target_local_ned_t &sp);
 void set_acceleration(float ax, float ay, float az, mavlink_set_position_target_local_ned_t &sp);

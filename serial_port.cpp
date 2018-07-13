@@ -77,7 +77,7 @@ Serial_Port::
 	~Serial_Port()
 {
 	// destroy mutex
-	pthread_mutex_destroy(&lock);
+	// pthread_mutex_destroy(&lock);
 }
 
 void Serial_Port::initialize_defaults()
@@ -91,12 +91,12 @@ void Serial_Port::initialize_defaults()
 	baudrate = 57600;
 
 	// Start mutex
-	int result = pthread_mutex_init(&lock, NULL);
-	if (result != 0)
-	{
-		printf("\n mutex init failed\n");
-		throw 1;
-	}
+	// int result = pthread_mutex_init(&lock, NULL);
+	// if (result != 0)
+	// {
+	// 	printf("\n mutex init failed\n");
+	// 	throw 1;
+	// }
 }
 
 // ------------------------------------------------------------------------------
@@ -472,12 +472,14 @@ int Serial_Port::_read_port(uint8_t &cp)
 {
 
 	// Lock
-	pthread_mutex_lock(&lock);
+	// pthread_mutex_lock(&lock);
+	serial_mutex.lock();
 
 	int result = read(fd, &cp, 1);
 
 	// Unlock
-	pthread_mutex_unlock(&lock);
+	// pthread_mutex_unlock(&lock);
+	serial_mutex.unlock();
 
 	return result;
 }
@@ -489,7 +491,8 @@ int Serial_Port::_write_port(char *buf, unsigned len)
 {
 
 	// Lock
-	pthread_mutex_lock(&lock);
+	// pthread_mutex_lock(&lock);
+	serial_mutex.lock();
 
 	// Write packet via serial link
 	const int bytesWritten = static_cast<int>(write(fd, buf, len));
@@ -498,7 +501,8 @@ int Serial_Port::_write_port(char *buf, unsigned len)
 	tcdrain(fd);
 
 	// Unlock
-	pthread_mutex_unlock(&lock);
+	// pthread_mutex_unlock(&lock);
+	serial_mutex.unlock();
 
 	return bytesWritten;
 }
