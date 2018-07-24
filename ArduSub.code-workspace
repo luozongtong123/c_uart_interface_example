@@ -6,7 +6,13 @@
 	],
 	"settings": {
 		"files.associations": {
-			"xlocale": "cpp"
+			"xlocale": "cpp",
+			"*.rh": "cpp",
+			"unordered_map": "cpp",
+			"vector": "cpp",
+			"xstring": "cpp",
+			"system_error": "cpp",
+			"ostream": "cpp"
 		}
 	}
 }

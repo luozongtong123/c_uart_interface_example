@@ -127,51 +127,54 @@ void *start_autopilot_interface_write_thread(void *args);
 
 struct Time_Stamps
 {
-	Time_Stamps()
-	{
-		reset_timestamps();
-	}
+    Time_Stamps()
+    {
+        reset_timestamps();
+    }
 
-	uint64_t heartbeat;
-	uint64_t sys_status;
-	uint64_t battery_status;
-	uint64_t radio_status;
-	uint64_t local_position_ned;
-	uint64_t global_position_int;
-	uint64_t position_target_local_ned;
-	uint64_t position_target_global_int;
-	uint64_t highres_imu;
-	uint64_t attitude;
-	uint64_t servo_output_raw;
-	uint64_t command_ack;
-	uint64_t named_value_float;
-	uint64_t vfr_hud;
-	uint64_t power_status;
-	uint64_t system_time;
-	uint64_t mission_current;
-	uint64_t gps_raw_int;
-	uint64_t nav_controller_output;
-	uint64_t rc_channels;
-	uint64_t vibration;
-	uint64_t raw_imu;
-	uint64_t scaled_pressure;
-	uint64_t scaled_imu2;
-	uint64_t scaled_pressure2;
+    uint64_t heartbeat;
+    uint64_t sys_status;
+    uint64_t battery_status;
+    uint64_t radio_status;
+    uint64_t local_position_ned;
+    uint64_t global_position_int;
+    uint64_t position_target_local_ned;
+    uint64_t position_target_global_int;
+    uint64_t highres_imu;
+    uint64_t attitude;
+    uint64_t servo_output_raw;
+    uint64_t command_ack;
+    uint64_t named_value_float;
+    uint64_t vfr_hud;
+    uint64_t power_status;
+    uint64_t system_time;
+    uint64_t mission_current;
+    uint64_t gps_raw_int;
+    uint64_t nav_controller_output;
+    uint64_t rc_channels;
+    uint64_t vibration;
+    uint64_t raw_imu;
+    uint64_t scaled_pressure;
+    uint64_t scaled_imu2;
+    uint64_t scaled_pressure2;
+    uint64_t rc_channels_raw;
+    uint64_t statustext;
+    uint64_t param_value;
 
-	void
-	reset_timestamps()
-	{
-		heartbeat = 0;
-		sys_status = 0;
-		battery_status = 0;
-		radio_status = 0;
-		local_position_ned = 0;
-		global_position_int = 0;
-		position_target_local_ned = 0;
-		position_target_global_int = 0;
-		highres_imu = 0;
-		attitude = 0;
-	}
+    void
+    reset_timestamps()
+    {
+        heartbeat = 0;
+        sys_status = 0;
+        battery_status = 0;
+        radio_status = 0;
+        local_position_ned = 0;
+        global_position_int = 0;
+        position_target_local_ned = 0;
+        position_target_global_int = 0;
+        highres_imu = 0;
+        attitude = 0;
+    }
 };
 
 // Struct containing information on the MAV we are currently connected to
@@ -179,94 +182,103 @@ struct Time_Stamps
 struct Mavlink_Messages
 {
 
-	int sysid;
-	int compid;
+    int sysid;
+    int compid;
 
-	// Heartbeat
-	mavlink_heartbeat_t heartbeat;
+    // Heartbeat
+    mavlink_heartbeat_t heartbeat;
 
-	// System Status
-	mavlink_sys_status_t sys_status;
+    // System Status
+    mavlink_sys_status_t sys_status;
 
-	// Battery Status
-	mavlink_battery_status_t battery_status;
+    // Battery Status
+    mavlink_battery_status_t battery_status;
 
-	// Radio Status
-	mavlink_radio_status_t radio_status;
+    // Radio Status
+    mavlink_radio_status_t radio_status;
 
-	// Local Position
-	mavlink_local_position_ned_t local_position_ned;
+    // Local Position
+    mavlink_local_position_ned_t local_position_ned;
 
-	// Global Position
-	mavlink_global_position_int_t global_position_int;
+    // Global Position
+    mavlink_global_position_int_t global_position_int;
 
-	// Local Position Target
-	mavlink_position_target_local_ned_t position_target_local_ned;
+    // Local Position Target
+    mavlink_position_target_local_ned_t position_target_local_ned;
 
-	// Global Position Target
-	mavlink_position_target_global_int_t position_target_global_int;
+    // Global Position Target
+    mavlink_position_target_global_int_t position_target_global_int;
 
-	// HiRes IMU
-	mavlink_highres_imu_t highres_imu;
+    // HiRes IMU
+    mavlink_highres_imu_t highres_imu;
 
-	// Attitude
-	mavlink_attitude_t attitude;
+    // Attitude
+    mavlink_attitude_t attitude;
 
-	// Servo Output Raw
-	mavlink_servo_output_raw_t servo_output_raw;
+    // Servo Output Raw
+    mavlink_servo_output_raw_t servo_output_raw;
 
-	// Command ACK
-	mavlink_command_ack_t command_ack;
+    // Command ACK
+    mavlink_command_ack_t command_ack;
 
-	// Named Value Float
-	mavlink_named_value_float_t named_value_float;
+    // Named Value Float
+    mavlink_named_value_float_t named_value_float;
 
-	// VFR_HUD
-	mavlink_vfr_hud_t vfr_hud;
+    // VFR_HUD
+    mavlink_vfr_hud_t vfr_hud;
 
-	// Power Status
-	mavlink_power_status_t power_status;
+    // Power Status
+    mavlink_power_status_t power_status;
 
-	// System Time
-	mavlink_system_time_t system_time;
+    // System Time
+    mavlink_system_time_t system_time;
 
-	// Mission Current
-	mavlink_mission_current_t mission_current;
+    // Mission Current
+    mavlink_mission_current_t mission_current;
 
-	// GPS Raw INT
-	mavlink_gps_raw_int_t gps_raw_int;
+    // GPS Raw INT
+    mavlink_gps_raw_int_t gps_raw_int;
 
-	// NAV Controller Output
-	mavlink_nav_controller_output_t nav_controller_output;
+    // NAV Controller Output
+    mavlink_nav_controller_output_t nav_controller_output;
 
-	// RC Channels
-	mavlink_rc_channels_t rc_channels;
+    // RC Channels
+    mavlink_rc_channels_t rc_channels;
 
-	// Vibration
-	mavlink_vibration_t vibration;
+    // Vibration
+    mavlink_vibration_t vibration;
 
-	// Raw IMU
-	mavlink_raw_imu_t raw_imu;
+    // Raw IMU
+    mavlink_raw_imu_t raw_imu;
 
-	// Scaled Pressure
-	mavlink_scaled_pressure_t scaled_pressure;
+    // Scaled Pressure
+    mavlink_scaled_pressure_t scaled_pressure;
 
-	// Scaled IMU2
-	mavlink_scaled_imu2_t scaled_imu2;
+    // Scaled IMU2
+    mavlink_scaled_imu2_t scaled_imu2;
 
-	// Scaled Pressure (depth sensor)
-	mavlink_scaled_pressure2_t scaled_pressure2;
+    // Scaled Pressure (depth sensor)
+    mavlink_scaled_pressure2_t scaled_pressure2;
 
-	// System Parameters?
+    // RC channels raw
+    mavlink_rc_channels_raw_t rc_channels_raw;
 
-	// Time Stamps
-	Time_Stamps time_stamps;
+    // StatusText
+    mavlink_statustext_t statustext;
 
-	void
-	reset_timestamps()
-	{
-		time_stamps.reset_timestamps();
-	}
+    // Param Value
+    mavlink_param_value_t param_value;
+
+    // System Parameters?
+
+    // Time Stamps
+    Time_Stamps time_stamps;
+
+    void
+    reset_timestamps()
+    {
+        time_stamps.reset_timestamps();
+    }
 };
 
 // ----------------------------------------------------------------------------------
@@ -290,52 +302,66 @@ class Autopilot_Interface
 {
 
   public:
-	Autopilot_Interface();
-	Autopilot_Interface(Serial_Port *serial_port_);
-	~Autopilot_Interface();
+    Autopilot_Interface();
+    Autopilot_Interface(Serial_Port *serial_port_);
+    ~Autopilot_Interface();
 
-	char reading_status;
-	char writing_status;
-	char control_status;
-	uint64_t write_count;
+    char reading_status;
+    char writing_status;
+    char heartbeat_writing_status;
+    char control_status;
+    uint64_t write_count;
 
-	int system_id;
-	int autopilot_id;
-	int companion_id;
+    int system_id;
+    int autopilot_id;
+    int companion_id;
 
-	Mavlink_Messages current_messages;
-	mavlink_set_position_target_local_ned_t initial_position;
+    Mavlink_Messages current_messages;
+    mavlink_set_position_target_local_ned_t initial_position;
 
-	void update_setpoint(mavlink_set_position_target_local_ned_t setpoint);
-	void read_messages();
-	int write_message(mavlink_message_t message);
+    void update_setpoint(mavlink_set_position_target_local_ned_t setpoint);
+    void read_messages();
+    int write_message(mavlink_message_t message);
 
-	void enable_offboard_control();
-	void disable_offboard_control();
+    void enable_offboard_control();
+    void disable_offboard_control();
+    void vehicle_arm();
+    void vehicle_disarm();
 
-	void start();
-	void stop();
+    void start();
+    void stop();
 
-	void start_read_thread();
-	void start_write_thread(void);
+    void start_read_thread();
+    void start_write_thread(void);
+    void start_write_heartbeat_thread();
 
-	void handle_quit(int sig);
+    void do_set_servo(float servo_no, float pwm);
+    void do_motor_test(float motor_no, float pwm);
+    void request_param_list(void);
+
+    void handle_quit(int sig);
 
   private:
-	Serial_Port *serial_port;
+    Serial_Port *serial_port;
 
-	bool time_to_exit;
+    bool time_to_exit;
 
-	pthread_t read_tid;
-	pthread_t write_tid;
+    pthread_t read_tid;
+    pthread_t write_tid;
 
-	mavlink_set_position_target_local_ned_t current_setpoint;
+    mavlink_set_position_target_local_ned_t current_setpoint;
 
-	void read_thread();
-	void write_thread(void);
+    void read_thread();
+    void write_thread(void);
+    void write_heartbeat_thread(void);
 
-	int toggle_offboard_control(bool flag);
-	void write_setpoint();
+    int toggle_offboard_control(bool flag);
+    void write_setpoint();
+    void write_heartbeat(mavlink_heartbeat_t hb);
 };
+
+#ifdef WIN32
+void usleep(long usec);
+#endif
 
 #endif // AUTOPILOT_INTERFACE_H_
